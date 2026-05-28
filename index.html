@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mountain Lion Habitat Analysis</title>
+    <link rel="icon" href="data:;base64,=" />
+  </head>
+
+  <body class="calcite-mode-light">
+    <calcite-shell id="appShell">
+      <calcite-shell-panel id="filterShellPanel" slot="panel-end">
+        <calcite-action-bar
+          id="mobileFilterActionBar"
+          slot="action-bar"
+          floating
+          expand-disabled
+          layout="horizontal"
+          selection-mode="single"
+        >
+          <calcite-action
+            scale="l"
+            data-filter-id="habitatAnalysis"
+            icon="collection"
+            label="Combined"
+          ></calcite-action>
+          <calcite-action
+            scale="l"
+            data-filter-id="protectedStatus"
+            icon="number-of-territories"
+            label="Protected"
+          ></calcite-action>
+          <calcite-action
+            scale="l"
+            data-filter-id="landCover"
+            icon="tree"
+            label="Cover"
+          ></calcite-action>
+          <calcite-action
+            scale="l"
+            data-filter-id="terrainRuggedness"
+            icon="altitude"
+            label="Terrain"
+          ></calcite-action>
+          <calcite-action
+            scale="l"
+            data-filter-id="distanceToRoad"
+            icon="rural-driving-distance"
+            label="Roads"
+          ></calcite-action>
+        </calcite-action-bar>
+        <calcite-panel id="filterPanel" scale="l">
+          <div
+            class="vintage-map-title title-detail-collapsible"
+            slot="content-top"
+          >
+            <div class="map-title-super">ArcGIS Maps SDK for JavaScript</div>
+            <div class="map-title-main">Mountain Lions</div>
+            <div class="map-title-sub">of</div>
+            <div class="map-title-main">Los Angeles</div>
+            <div class="map-title-detail">
+              Exploring mountain lion habitat factors and impacts in the greater
+              Los Angeles region
+            </div>
+          </div>
+
+          <calcite-list
+            scale="l"
+            id="filterList"
+            label="Mountain lion habitat filters"
+            selection-mode="single"
+            selection-appearance="highlight"
+            tabindex="0"
+          >
+            <calcite-list-item
+              value="habitatAnalysis"
+              label="Combined analysis"
+              selected
+              data-description="Foothills and mountains are considered prime mountain lion habitat where deer are present."
+            >
+              <calcite-icon
+                icon="collection"
+                slot="content-start"
+                scale="l"
+              ></calcite-icon>
+            </calcite-list-item>
+            <calcite-list-item
+              value="protectedStatus"
+              label="Protected status"
+              data-description="Protected status refers to state parks, national forests, and other minimally developed land."
+            >
+              <calcite-icon
+                icon="number-of-territories"
+                slot="content-start"
+                scale="l"
+              ></calcite-icon>
+            </calcite-list-item>
+
+            <calcite-list-item
+              value="landCover"
+              label="Land cover"
+              data-description="Both mountain lions and their prey tend to prefer forested or shrubby land."
+            >
+              <calcite-icon
+                icon="tree"
+                slot="content-start"
+                scale="l"
+              ></calcite-icon>
+            </calcite-list-item>
+
+            <calcite-list-item
+              value="terrainRuggedness"
+              label="Rugged terrain"
+              data-description="Steep slopes and abrupt changes in elevation provide visual cover and hunting advantage."
+            >
+              <calcite-icon
+                icon="altitude"
+                slot="content-start"
+                scale="l"
+              ></calcite-icon>
+              <div slot="content-bottom">
+                <div class="slider-inline-row">
+                  <calcite-slider
+                    id="terrainRuggednessSlider"
+                    scale="l"
+                    min-value="45"
+                    max-value="70"
+                    min="0"
+                    max="100"
+                  ></calcite-slider>
+                  <div class="slider-stat-row">
+                    <calcite-chip class="slider-stat-chip" scale="s">
+                      <span class="slider-stat-label">Min</span>
+                      <span
+                        id="terrainRuggednessMinStat"
+                        class="slider-stat-value"
+                      ></span>
+                    </calcite-chip>
+                    <calcite-chip class="slider-stat-chip" scale="s">
+                      <span class="slider-stat-label">Max</span>
+                      <span
+                        id="terrainRuggednessMaxStat"
+                        class="slider-stat-value"
+                      ></span>
+                    </calcite-chip>
+                  </div>
+                </div>
+              </div>
+            </calcite-list-item>
+            <calcite-list-item
+              value="distanceToRoad"
+              label="Distance to roads"
+              data-description="Roads are dangerous for mountain lions, and serve as a proxy for development."
+            >
+              <calcite-icon
+                icon="rural-driving-distance"
+                slot="content-start"
+                scale="l"
+              ></calcite-icon>
+              <div slot="content-bottom">
+                <div class="slider-inline-row">
+                  <calcite-slider
+                    id="distanceToRoadSlider"
+                    scale="l"
+                    min-value="60"
+                    max-value="300"
+                    min="0"
+                    max="1000"
+                  ></calcite-slider>
+                  <div class="slider-stat-row">
+                    <calcite-chip class="slider-stat-chip" scale="s">
+                      <span class="slider-stat-label">Min</span>
+                      <span
+                        id="distanceToRoadMinStat"
+                        class="slider-stat-value"
+                      ></span>
+                    </calcite-chip>
+                    <calcite-chip class="slider-stat-chip" scale="s">
+                      <span class="slider-stat-label">Max</span>
+                      <span
+                        id="distanceToRoadMaxStat"
+                        class="slider-stat-value"
+                      ></span>
+                    </calcite-chip>
+                  </div>
+                </div>
+              </div>
+            </calcite-list-item>
+          </calcite-list>
+
+          <arcgis-map
+            id="insetMapElement"
+            class="app-map"
+            tabindex="-1"
+            aria-hidden="true"
+            slot="footer"
+            hide-attribution
+          ></arcgis-map>
+        </calcite-panel>
+      </calcite-shell-panel>
+
+      <main id="appLayout">
+        <div
+          id="mobileTitleBlock"
+          class="vintage-map-title title-detail-collapsible"
+        >
+          <div class="map-title-super">ArcGIS Maps SDK for JavaScript</div>
+          <div class="map-title-main">Mountain Lions</div>
+          <div class="map-title-sub">of</div>
+          <div class="map-title-main">Los Angeles</div>
+          <div class="map-title-detail">
+            Exploring mountain lion habitat factors and impacts in the greater
+            Los Angeles region
+          </div>
+        </div>
+
+        <arcgis-map id="mapElement" class="app-map" center="-118.6,34.25">
+          <arcgis-home id="homeElement" slot="top-left"></arcgis-home>
+          <arcgis-zoom slot="top-left"></arcgis-zoom>
+        </arcgis-map>
+      </main>
+    </calcite-shell>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
