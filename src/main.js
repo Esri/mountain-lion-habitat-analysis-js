@@ -562,6 +562,8 @@ function syncResponsiveFilterShell() {
 
   filterShellPanel.slot = isMobileLayout ? "panel-bottom" : "panel-end";
   filterShellPanel.collapsed = isMobileLayout && !selectedLayerId;
+  filterShellPanel.displayMode = isMobileLayout ? "overlay" : "dock";
+
   filterList.slot = isMobileLayout ? "content-top" : "";
   filterList.selectionMode = isMobileLayout ? "none" : "single";
 
