@@ -55,9 +55,11 @@
             slot="content-top"
           >
             <div class="map-title-super">ArcGIS Maps SDK for JavaScript</div>
-            <div class="map-title-main">Mountain Lions</div>
-            <div class="map-title-sub">of</div>
-            <div class="map-title-main">Los Angeles</div>
+            <div class="map-title-line">
+              <div class="map-title-main">Mountain Lions</div>
+              <div class="map-title-sub">of</div>
+            </div>
+            <div class="map-title-main map-title-city">Los Angeles</div>
             <div class="map-title-detail">
               Exploring mountain lion habitat factors and impacts in the greater
               Los Angeles region
@@ -205,16 +207,23 @@
           class="vintage-map-title title-detail-collapsible"
         >
           <div class="map-title-super">ArcGIS Maps SDK for JavaScript</div>
-          <div class="map-title-main">Mountain Lions</div>
-          <div class="map-title-sub">of</div>
-          <div class="map-title-main">Los Angeles</div>
+          <div class="map-title-line">
+            <div class="map-title-main">Mountain Lions</div>
+            <div class="map-title-sub">of</div>
+          </div>
+          <div class="map-title-main map-title-city">Los Angeles</div>
           <div class="map-title-detail">
             Exploring mountain lion habitat factors and impacts in the greater
             Los Angeles region
           </div>
         </div>
 
-        <arcgis-map id="mapElement" class="app-map" center="-118.6,34.33" zoom="10">
+        <arcgis-map
+          id="mapElement"
+          class="app-map"
+          center="-118.6,34.33"
+          zoom="10"
+        >
           <arcgis-home id="homeElement" slot="top-left"></arcgis-home>
           <arcgis-zoom slot="top-left"></arcgis-zoom>
         </arcgis-map>

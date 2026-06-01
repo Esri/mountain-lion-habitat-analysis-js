@@ -7,7 +7,7 @@ body {
   margin: 0;
   height: 100%;
   width: 100%;
-  --app-frame-space: var(--calcite-size-md);
+  --app-frame-space: var(--calcite-size-sm);
   --calcite-color-brand: #c56d47;
   --calcite-color-brand-hover: #267121;
   --calcite-color-brand-press: #1d5519;
@@ -59,11 +59,13 @@ body {
 @media (max-width: 760px) {
   #filterShellPanel {
     margin-inline: calc(var(--app-frame-space) / 2) 0;
+    z-index: 9;
   }
 
   #filterShellPanel[slot="panel-bottom"] {
     display: block;
     margin: 0;
+    --calcite-shell-panel-min-height: 14rem;
   }
 
   #filterShellPanel[slot="panel-bottom"] .vintage-map-title {
@@ -72,8 +74,6 @@ body {
 
   #filterShellPanel[slot="panel-bottom"] #filterPanel {
     margin: 0;
-    min-height: 14rem;
-    height: 20vh;
     --calcite-panel-content-top-space: 0 var(--calcite-size-xs)
       var(--calcite-size-xs);
     --calcite-panel-background-color: var(--calcite-color-foreground-3);
@@ -116,7 +116,6 @@ body {
 
 #mapElement {
   flex: 1 1 auto;
-  min-block-size: 22rem;
   box-shadow: var(--calcite-shadow-md);
   overflow: visible;
 }
@@ -263,14 +262,6 @@ body {
     --calcite-action-bar-background-color: var(--calcite-color-foreground-2);
   }
 
-  #filterShellPanel[slot="panel-bottom"]:has(#filterPanel:not([closed])):has(
-      #mobileFilterActionBar calcite-action[selected]
-    )
-    #mobileFilterActionBar {
-    margin-top: 0;
-    background-color: var(--calcite-color-foreground-3);
-  }
-
   #mobileFilterActionBar calcite-action[selected] {
     --calcite-color-transparent-press: var(--calcite-color-brand);
     --calcite-icon-color: var(--calcite-color-foreground-2);
@@ -293,17 +284,24 @@ body {
   margin-block-end: calc(var(--app-frame-space) / 2);
 }
 
+.map-title-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
 .map-title-main {
-  font-size: 2.25rem;
-  font-weight: var(--calcite-font-weight-bold);
-  letter-spacing: 2.5px;
+  font-size: 1.625rem;
+  letter-spacing: 2px;
   color: var(--calcite-color-text-1);
   text-transform: uppercase;
 }
 
-.map-title-main:nth-of-type(2) {
-  font-size: 1.5rem;
-  letter-spacing: 2px;
+.map-title-city {
+  font-size: 2.25rem;
+  letter-spacing: 4px;
+  margin-block-start: 0.25rem;
+  font-weight: var(--calcite-font-weight-bold);
 }
 
 .map-title-sub,
@@ -313,8 +311,11 @@ body {
 }
 
 .map-title-sub {
+  display: inline-flex;
+  align-self: center;
+  white-space: nowrap;
+  flex: 0 0 auto;
   font-size: var(--calcite-font-size--1);
-  margin: 0.25rem 0 0;
 }
 
 .map-title-detail {
