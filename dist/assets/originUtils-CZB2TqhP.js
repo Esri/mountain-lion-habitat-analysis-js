@@ -1,1 +1,0 @@
-import{mt as o}from"./index-BQH2k51y.js";function p(i){i?.writtenProperties&&i.writtenProperties.forEach(({target:r,propName:e,newOrigin:t})=>{o(r)&&t&&r.originOf(e)!==t&&r.updateOrigin(e,t)})}export{p as i};

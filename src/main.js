@@ -703,6 +703,7 @@ async function initializeApp() {
     },
     listMode: "hide",
     popupEnabled: false,
+    effect: "opacity(0.75)"
   });
 
   const vtseLabels = new VectorTileLayer({
@@ -765,11 +766,6 @@ async function initializeApp() {
         };
       }
     }
-
-    // await map.basemap.loadAll();
-    map.basemap.baseLayers.forEach((layer) => {
-      layer.effect = "opacity(0.75)";
-    });
   }
 
   function updateHabitatLayer() {
