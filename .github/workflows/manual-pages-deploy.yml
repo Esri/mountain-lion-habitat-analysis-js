@@ -1,7 +1,9 @@
-name: Manual Pages Deploy
+name: Pages Deploy
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
