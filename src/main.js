@@ -61,9 +61,36 @@ const filterItems = Array.from(
 const wholeNumberFormatter = new Intl.NumberFormat("en-US");
 
 mapElement.dataset.loaded = "false";
+
+async function ensureCustomElementsReady() {
+  await Promise.all([
+    globalThis.customElements.whenDefined("arcgis-map"),
+    globalThis.customElements.whenDefined("calcite-slider"),
+  ]);
+}
+
+function getSliderNumericValue(slider, propertyName, attributeName) {
+  const propertyValue = Number(slider?.[propertyName]);
+
+  if (Number.isFinite(propertyValue)) {
+    return propertyValue;
+  }
+
+  const attributeValue = Number(slider?.getAttribute(attributeName));
+  return Number.isFinite(attributeValue) ? attributeValue : 0;
+}
+
+function getSliderRange(slider) {
+  return [
+    getSliderNumericValue(slider, "minValue", "min-value"),
+    getSliderNumericValue(slider, "maxValue", "max-value"),
+  ];
+}
+
 function syncRangeStats(slider, minElement, maxElement, unit) {
-  minElement.textContent = `${wholeNumberFormatter.format(Math.round(slider.minValue))} ${unit}`;
-  maxElement.textContent = `${wholeNumberFormatter.format(Math.round(slider.maxValue))} ${unit}`;
+  const [minValue, maxValue] = getSliderRange(slider);
+  minElement.textContent = `${wholeNumberFormatter.format(Math.round(minValue))} ${unit}`;
+  maxElement.textContent = `${wholeNumberFormatter.format(Math.round(maxValue))} ${unit}`;
 }
 
 function getSelectedLayerId() {
@@ -166,7 +193,7 @@ function getInsetZoom(mainZoom) {
 }
 
 async function addExtentOverlay({ layers, map }) {
-  await Promise.all(layers.map((layer) => layer.load())).catch(error => {
+  await Promise.all(layers.map((layer) => layer.load())).catch((error) => {
     console.error("Error loading layers for extent overlay:", error);
     return null;
   });
@@ -265,9 +292,11 @@ async function setupInsetMap() {
       }
 
       insetZoom = nextInsetZoom;
-      await insetMapElement.goTo({ zoom: nextInsetZoom }, { animate: true }).catch((error) => {
-        console.error("Error syncing inset zoom:", error);
-      });
+      await insetMapElement
+        .goTo({ zoom: nextInsetZoom }, { animate: true })
+        .catch((error) => {
+          console.error("Error syncing inset zoom:", error);
+        });
     };
 
     const syncInsetExtent = (extent = mapElement?.extent) => {
@@ -288,15 +317,17 @@ async function setupInsetMap() {
       return;
     }
 
-    await insetMapElement.goTo(
-      {
-        center: initialExtent.center,
-        zoom: insetZoom,
-      },
-      { animate: false },
-    ).catch((error) => {      console.error("Error setting initial inset view:", error);
-    });
-  
+    await insetMapElement
+      .goTo(
+        {
+          center: initialExtent.center,
+          zoom: insetZoom,
+        },
+        { animate: false },
+      )
+      .catch((error) => {
+        console.error("Error setting initial inset view:", error);
+      });
 
     const insetPanBounds = insetMapElement.extent?.clone();
     if (insetPanBounds) {
@@ -618,17 +649,13 @@ function syncMobileFilterSelectionUi(selectedLayerId) {
 }
 
 async function initializeApp() {
+  await ensureCustomElementsReady();
+
   syncResponsiveFilterShell();
   MOBILE_LAYOUT_QUERY.addEventListener("change", syncResponsiveFilterShell);
 
-  let roadThresholds = [
-    distanceToRoadSlider.minValue,
-    distanceToRoadSlider.maxValue,
-  ];
-  let ruggednessThresholds = [
-    terrainRuggednessSlider.minValue,
-    terrainRuggednessSlider.maxValue,
-  ];
+  let roadThresholds = getSliderRange(distanceToRoadSlider);
+  let ruggednessThresholds = getSliderRange(terrainRuggednessSlider);
 
   const serviceUrl =
     "https://tiledimageservices.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/mountain_lion/ImageServer";
@@ -703,7 +730,7 @@ async function initializeApp() {
     },
     listMode: "hide",
     popupEnabled: false,
-    effect: "opacity(0.75)"
+    effect: "opacity(0.75)",
   });
 
   const vtseLabels = new VectorTileLayer({
@@ -799,10 +826,7 @@ async function initializeApp() {
   }
 
   function handleRoadSliderInput() {
-    roadThresholds = [
-      distanceToRoadSlider.minValue,
-      distanceToRoadSlider.maxValue,
-    ];
+    roadThresholds = getSliderRange(distanceToRoadSlider);
     syncRangeStats(
       distanceToRoadSlider,
       distanceToRoadMinStat,
@@ -820,10 +844,7 @@ async function initializeApp() {
   }
 
   function handleRuggednessSliderInput() {
-    ruggednessThresholds = [
-      terrainRuggednessSlider.minValue,
-      terrainRuggednessSlider.maxValue,
-    ];
+    ruggednessThresholds = getSliderRange(terrainRuggednessSlider);
     syncRangeStats(
       terrainRuggednessSlider,
       terrainRuggednessMinStat,
@@ -891,4 +912,6 @@ async function initializeApp() {
   mapElement.dataset.loaded = "true";
 }
 
-await initializeApp();
+void initializeApp().catch((error) => {
+  console.error("Error initializing app:", error);
+});
