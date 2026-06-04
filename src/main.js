@@ -603,7 +603,7 @@ function syncResponsiveFilterShell() {
 }
 
 function syncViewScale(isMobileLayout) {
-  if (!mapElement) {
+  if (!mapElement && !mapElement.constraints) {
     return;
   }
   mapElement.constraints.minZoom = isMobileLayout
@@ -779,7 +779,7 @@ async function initializeApp() {
         mapElement.constraints = {
           ...mapElement.constraints,
           geometry: mainPanBounds,
-          minZoom: isMobileLayout ? MAIN_START_ZOOM-1 : MAIN_START_ZOOM,
+          minZoom: isMobileLayout ? MAIN_START_ZOOM - 1 : MAIN_START_ZOOM,
           maxZoom: MAIN_MAX_ZOOM,
         };
       }
