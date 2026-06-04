@@ -526,33 +526,13 @@ async function ensureInsetMapSetup() {
   }
 
   if (!insetSetupPromise) {
-    insetSetupPromise = setupInsetMap()
-      .then(() => {
-        resizeViewsForLayout({ includeInset: true });
-      })
-      .catch((error) => {
-        insetSetupPromise = null;
-        console.error("Error setting up inset map:", error);
-      });
+    insetSetupPromise = setupInsetMap().catch((error) => {
+      insetSetupPromise = null;
+      console.error("Error setting up inset map:", error);
+    });
   }
 
   await insetSetupPromise;
-}
-
-function resizeViewsForLayout({ includeInset = false } = {}) {
-  globalThis.requestAnimationFrame(() => {
-    const views = [mapElement.view];
-
-    if (includeInset) {
-      views.push(insetMapElement?.view);
-    }
-
-    views.forEach((view) => {
-      if (typeof view?.resize === "function") {
-        view.resize();
-      }
-    });
-  });
 }
 
 function syncFilterPanelHeader(selectedLayerId) {
@@ -615,15 +595,26 @@ function syncResponsiveFilterShell() {
 
   syncFilterPanelHeader(selectedLayerId);
   syncMobileFilterSelectionUi(selectedLayerId);
-  resizeViewsForLayout();
+  syncViewScale(isMobileLayout);
 
   if (!isMobileLayout) {
     void ensureInsetMapSetup();
   }
 }
 
+function syncViewScale(isMobileLayout) {
+  if (!mapElement) {
+    return;
+  }
+  mapElement.constraints = isMobileLayout
+    ? { ...mapElement.constraints, minZoom: MAIN_START_ZOOM - 1 }
+    : { ...mapElement.constraints, minZoom: MAIN_START_ZOOM };
+}
+
 function syncMobileFilterSelectionUi(selectedLayerId) {
   const isMobileLayout = MOBILE_LAYOUT_QUERY.matches;
+  filterPanel.scale = isMobileLayout ? "m" : "l";
+  filterList.scale = isMobileLayout ? "m" : "l";
 
   mobileFilterActions.forEach((action) => {
     const isSelected = action.dataset.filterId === selectedLayerId;
@@ -784,14 +775,7 @@ async function initializeApp() {
       }
 
       const mainPanBounds = highlightedAreaExtent.clone();
-      if (mainPanBounds) {
-        mapElement.constraints = {
-          ...mapElement.constraints,
-          geometry: mainPanBounds,
-          minZoom: MAIN_START_ZOOM,
-          maxZoom: MAIN_MAX_ZOOM,
-        };
-      }
+      syncViewScale(MOBILE_LAYOUT_QUERY.matches);
     }
   }
 
@@ -831,7 +815,7 @@ async function initializeApp() {
       distanceToRoadSlider,
       distanceToRoadMinStat,
       distanceToRoadMaxStat,
-      "ft",
+      "px",
     );
     distanceToRoadLayer.rasterFunction = createColormapFunction(
       createRoadFunction(roadThresholds),
@@ -849,7 +833,7 @@ async function initializeApp() {
       terrainRuggednessSlider,
       terrainRuggednessMinStat,
       terrainRuggednessMaxStat,
-      "deg",
+      "px",
     );
     terrainRuggednessLayer.rasterFunction = createColormapFunction(
       createTerrainRuggednessFunction(ruggednessThresholds),
@@ -875,13 +859,13 @@ async function initializeApp() {
     distanceToRoadSlider,
     distanceToRoadMinStat,
     distanceToRoadMaxStat,
-    "ft",
+    "px",
   );
   syncRangeStats(
     terrainRuggednessSlider,
     terrainRuggednessMinStat,
     terrainRuggednessMaxStat,
-    "deg",
+    "px",
   );
 
   [distanceToRoadSlider, terrainRuggednessSlider].forEach(
