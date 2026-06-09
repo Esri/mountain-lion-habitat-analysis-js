@@ -346,3 +346,12 @@ body {
     margin: var(--app-frame-space) var(--app-frame-space) 0;
   }
 }
+
+@media (min-width: 761px) {
+  calcite-list-item[value="habitatAnalysis"] {
+    border-block-end: 3px double var(--calcite-color-brand);
+  }
+  calcite-list-item[value="habitatAnalysis"][selected] {
+    border-block-end-style: solid;
+  }
+}
