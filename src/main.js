@@ -64,11 +64,7 @@ const wholeNumberFormatter = new Intl.NumberFormat("en-US");
 mapElement.dataset.loaded = "false";
 
 async function ensureCustomElementsReady() {
-  await Promise.all([
-    globalThis.customElements.whenDefined("arcgis-map"),
-    globalThis.customElements.whenDefined("calcite-slider"),
-    globalThis.customElements.whenDefined("calcite-progress"),
-  ]);
+  await globalThis.customElements.whenDefined("arcgis-map");
 }
 
 async function fadeMapBackgroundAfterLoad(mapComponent) {
