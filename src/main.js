@@ -626,6 +626,7 @@ function syncMobileFilterSelectionUi(selectedLayerId) {
   const isMobileLayout = MOBILE_LAYOUT_QUERY.matches;
   filterPanel.scale = isMobileLayout ? "m" : "l";
   filterList.scale = isMobileLayout ? "m" : "l";
+  filterList.interActionMode = isMobileLayout ? "static" : "interactive";
 
   mobileFilterActions.forEach((action) => {
     const isSelected = action.dataset.filterId === selectedLayerId;
@@ -633,10 +634,6 @@ function syncMobileFilterSelectionUi(selectedLayerId) {
     action.toggleAttribute("active", isSelected);
     action.toggleAttribute("selected", isSelected);
   });
-
-  if (isMobileLayout) {
-    filterList.setAttribute("interaction-mode", "static");
-  }
 
   filterItems.forEach((item) => {
     const isVisible = !isMobileLayout || item.value === selectedLayerId;
