@@ -44,7 +44,8 @@ body {
 
 #filterShellPanel {
   --calcite-shell-panel-width: 25rem;
-  margin: var(--app-frame-space) var(--app-frame-space) var(--app-frame-space) 0;
+  margin: var(--app-frame-space);
+  margin-inline-start: 0;
 }
 
 @media (max-width: 1080px) {
