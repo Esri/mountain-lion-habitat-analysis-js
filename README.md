@@ -10,28 +10,24 @@ Showcase application for the [ArcGIS Maps SDK for JavaScript](https://js.arcgis.
 ## Development
 
 1. Install dependencies.
+   ```bash
+   npm ci
+   ```
 
-```bash
-npm ci
-```
-
-1. Start the local development server.
-
-```bash
-npm run dev
-```
+2. Start the local development server.
+   ```bash
+   npm run dev
+   ```
 
 1. Create a production build.
-
-```bash
-npm run build
-```
+   ```bash
+   npm run build
+   ```
 
 1. Preview the production build locally.
-
-```bash
-npm run preview
-```
+   ```bash
+   npm run preview
+   ```
 
 ## Deployment
 
