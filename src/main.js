@@ -88,7 +88,7 @@ async function fadeMapBackgroundAfterLoad(mapComponent) {
     return;
   }
 
-  await reactiveUtils.whenOnce(() => !mapComponent.updating);
+  await reactiveUtils.whenOnce(() => !mapComponent.basemapView.updating);
   mapComponent.dataset.loaded = "true";
 }
 
