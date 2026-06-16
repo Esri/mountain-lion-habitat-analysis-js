@@ -83,12 +83,16 @@ async function ensureCustomElementsReady() {
   await globalThis.customElements.whenDefined("arcgis-map");
 }
 
-async function fadeMapBackgroundAfterLoad(mapComponent) {
+async function fadeMapBackgroundAfterLoad(mapComponent, isInsetMap = false) {
   if (!mapComponent) {
     return;
   }
 
-  await reactiveUtils.whenOnce(() => !mapComponent.basemapView.updating);
+  if (isInsetMap) {
+    await reactiveUtils.whenOnce(() => !mapComponent.updating);
+  } else {
+    await reactiveUtils.whenOnce(() => !mapComponent.basemapView.updating);
+  }
   mapComponent.dataset.loaded = "true";
 }
 
@@ -365,7 +369,7 @@ async function setupInsetMap() {
     }
 
     syncInsetExtent(initialExtent);
-    await fadeMapBackgroundAfterLoad(insetMapElement);
+    await fadeMapBackgroundAfterLoad(insetMapElement, true);
     reactiveUtils.watch(() => mapElement.extent, syncInsetExtent);
     reactiveUtils.watch(
       () => mapElement.zoom,
